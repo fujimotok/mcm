@@ -7,8 +7,8 @@ export default {
     port: 443,
     host: '0.0.0.0',
     https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'cert/192.168.11.39-key.pem')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'cert/192.168.11.39.pem'))
+      key: fs.readFileSync(path.resolve(__dirname, 'cert/localhost-key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'cert/localhost.pem'))
     }
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
