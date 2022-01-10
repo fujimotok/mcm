@@ -58,8 +58,8 @@ export default {
   },
   mounted () {
     this.items = JSON.parse(localStorage.getItem('items')) || []
-    this.code = this.$route.query.code ?? ''
-    this.format = this.$route.query.format ?? 'CODE128'
+    this.code = localStorage.getItem('code') ?? ''
+    this.format = localStorage.getItem('format') ?? 'CODE128'
     this.isError = false
   },
   methods: {

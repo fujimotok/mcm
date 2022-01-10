@@ -126,7 +126,9 @@ export default {
       Quagga.init(this.config, this.onInitilize)
     },
     enter () {
-      this.$router.push({ path: '/add-item', query: { code: this.code, format: this.format.format } })
+      localStorage.setItem('code', this.code)
+      localStorage.setItem('format', this.format.format)
+      this.$router.push({ path: '/add-item' })
     }
   }
 }

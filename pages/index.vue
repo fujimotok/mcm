@@ -61,6 +61,8 @@ export default {
       localStorage.setItem('items', JSON.stringify(this.items))
     },
     add () {
+      localStorage.setItem('code', '')
+      localStorage.setItem('format', 'CODE128')
       this.$router.push('/add-item')
     },
     show (index) {
