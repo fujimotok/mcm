@@ -54,12 +54,17 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-apps',
+          icon: 'mdi-home',
           title: 'Home',
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-cog',
+          title: 'Settings',
+          to: '/settings'
+        },
+        {
+          icon: 'mdi-information',
           title: 'About',
           to: '/about'
         }
