@@ -1,18 +1,18 @@
-import colors from 'vuetify/es5/util/colors'
 import path from 'path'
 import fs from 'fs'
+import colors from 'vuetify/es5/util/colors'
 
-export default {
+const config = {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     script: [
       {
         src:
-        "https://cdn.jsdelivr.net/npm/pwacompat@2.0.6/pwacompat.min.js",
+        'https://cdn.jsdelivr.net/npm/pwacompat@2.0.6/pwacompat.min.js',
         integrity:
-        "sha384-GOaSLecPIMCJksN83HLuYf9FToOiQ2Df0+0ntv7ey8zjUHESXhthwvq9hXAZTifA",
-        crossorigin: "anonymous",
-        defer:true //ここ
+        'sha384-GOaSLecPIMCJksN83HLuYf9FToOiQ2Df0+0ntv7ey8zjUHESXhthwvq9hXAZTifA',
+        crossorigin: 'anonymous',
+        defer: true // ここ
       }
     ],
     titleTemplate: '%s - mcm',
@@ -22,7 +22,7 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
-      { name: 'mobile-web-app-capable', content: 'yes' },
+      { name: 'mobile-web-app-capable', content: 'yes' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -69,7 +69,8 @@ export default {
       name: 'mcm',
       lang: 'ja',
       description: '説明',
-      orientation: 'portrait', scope: '/',
+      orientation: 'portrait',
+      scope: '/',
       display: 'standalone',
       id: '/',
       start_url: '/',
@@ -119,3 +120,16 @@ export default {
   build: {
   }
 }
+
+if (process.env.NODE_ENV === 'development') {
+  config.server = {
+    port: 443,
+    host: '0.0.0.0',
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, 'cert/localhost-key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'cert/localhost.pem'))
+    }
+  }
+}
+
+export default config
