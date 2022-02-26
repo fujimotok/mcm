@@ -15,6 +15,8 @@
     "@chenfengyuan/vue-barcode": "^1.0.1",
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.19.3",
+    "dexie": "^3.2.1",
+    "indexeddb-export-import": "^2.1.5",
     "jsbarcode": "^3.11.5",
     "nuxt": "^2.15.8",
     "quagga": "^0.12.1",
