@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { db } from '../js/db'
+
 export default {
   name: 'ShowItem',
   data: () => ({
@@ -38,19 +40,26 @@ export default {
     isReadOnly: true,
     name: '',
     code: '',
-    items: [],
-    index: 0
+    refs: 0,
+    items: []
   }),
   head: () => ({
     title: 'カード情報'
   }),
   beforeMount () {
-    this.items = JSON.parse(localStorage.getItem('items')) || []
-    this.index = this.$route.query.index
-    this.name = this.items[this.index].name
-    this.code = this.items[this.index].code
-    this.format = this.items[this.index].format
-    this.options = { format: this.items[this.index].format }
+    db.cards.where('id').equals(Number(this.$route.query.index)).toArray()
+      .then((records) => {
+        this.isError = false
+        this.id = records[0].id
+        this.name = records[0].name
+        this.code = records[0].code
+        this.format = records[0].format
+        this.options = { format: this.format }
+        this.refs = records[0].refs + 1
+        db.cards.update(this.id, {
+          refs: this.refs
+        })
+      })
   },
   errorCaptured (err, vm, info) {
     console.log('catched by `CHILD errorCaptured`', err.toString())
@@ -58,9 +67,6 @@ export default {
     return false
   },
   methods: {
-    setItems () {
-      localStorage.setItem('items', JSON.stringify(this.items))
-    },
     edit () {
       this.isReadOnly = false
     },
@@ -69,17 +75,20 @@ export default {
         alert('コードもしくはフォーマットが不正です')
       } else {
         this.isReadOnly = true
-        this.items[this.index].name = this.name
-        this.items[this.index].code = this.code
-        this.items[this.index].format = this.format
-        this.setItems()
+
+        db.cards.update(this.id, {
+          name: this.name,
+          code: this.code,
+          format: this.format,
+          link: '',
+          refs: this.refs
+        })
         alert('更新完了')
       }
     },
     del () {
       if (confirm('本当に削除しても良いですか？')) {
-        this.items.splice(this.index, 1)
-        this.setItems()
+        db.cards.delete(this.id)
         this.$router.push('/')
       }
     },

@@ -15,6 +15,9 @@
 </template>
 
 <script>
+import IDBExportImport from 'indexeddb-export-import'
+import { db } from '../js/db'
+
 export default {
   name: 'SettingsPage',
   data () {
@@ -27,40 +30,58 @@ export default {
   }),
   methods: {
     dataImport () {
-      if (window.File) {
-        // ファイルデータを非同期で読み込みます。
-        if (this.file) {
-          this.readFileAsync(this.file)
-            .then((result) => {
-              // this.fileData.data = result;
-              const json = JSON.parse(result)
-              localStorage.setItem('code', json.code)
-              localStorage.setItem('format', json.code)
-              localStorage.setItem('items', JSON.stringify(json.items))
-              alert('インポート完了')
+      if (window.File && this.file) {
+        this.readFileAsync(this.file)
+          .then((result) => {
+            db.open().then(() => {
+              const idbDatabase = db.backendDB() // get native IDBDatabase object from Dexie wrapper
+
+              // export to JSON, clear database, and import from JSON
+              IDBExportImport.clearDatabase(idbDatabase, (err) => {
+                if (!err) { // cleared data successfully
+                  IDBExportImport.importFromJsonString(idbDatabase, result, (err) => {
+                    if (!err) {
+                      alert('インポート完了')
+                      this.$router.push('/')
+                    } else {
+                      alert('インポートに失敗しました')
+                    }
+                  })
+                }
+              })
             })
-            .catch((e) => {
-              alert(`エラー:${e}`)
-            })
-        }
+          })
+          .catch((e) => {
+            alert(`エラー:${e}`)
+          })
       } else {
         alert('お使いのブラウザは対応しておりません')
       }
     },
     dataExport () {
-      const jsonData = {
-        code: localStorage.getItem('code') ?? '',
-        format: localStorage.getItem('format') ?? '',
-        items: JSON.parse(localStorage.getItem('items')) || []
-      }
+      db.open().then(() => {
+        try {
+          const idbDatabase = db.backendDB()
 
-      const fileName = 'export.json'
-      const data = JSON.stringify(jsonData)
-      const link = document.createElement('a')
+          IDBExportImport.exportToJsonString(idbDatabase, function (err, jsonString) {
+            if (err) {
+              console.error(err)
+            } else {
+              console.log('Exported as JSON: ' + jsonString)
 
-      link.href = 'data:application/json,' + encodeURIComponent(data)
-      link.download = fileName
-      link.click()
+              const fileName = 'export.json'
+              const data = jsonString
+              const link = document.createElement('a')
+
+              link.href = 'data:application/json,' + encodeURIComponent(data)
+              link.download = fileName
+              link.click()
+            }
+          })
+        } catch (error) {
+          console.error('' + error)
+        }
+      })
     },
     // ファイルデータを非同期で読み込みます。
     readFileAsync (file) {

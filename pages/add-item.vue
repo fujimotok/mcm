@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { db } from '../js/db'
+
 export default {
   name: 'AddItem',
   data: () => ({
@@ -57,29 +59,26 @@ export default {
     return false
   },
   mounted () {
-    this.items = JSON.parse(localStorage.getItem('items')) || []
     this.code = localStorage.getItem('code') ?? ''
     this.format = localStorage.getItem('format') ?? 'CODE128'
     this.isError = false
   },
   methods: {
-    addItem () {
-      this.items.push({ name: this.name, code: this.code, format: this.format })
-      this.setItems()
-    },
-    deleteAllItems () {
-      this.items = []
-      this.setItems()
-    },
-    setItems () {
-      localStorage.setItem('items', JSON.stringify(this.items))
-    },
     add () {
       if (this.isError) {
         alert('コードもしくはフォーマットが不正です')
       } else {
-        this.addItem()
-        this.$router.push('/')
+        db.cards.add(
+          {
+            name: this.name,
+            code: this.code,
+            format: this.format,
+            url: '',
+            refs: 0
+          }
+        ).then(() => {
+          this.$router.push('/')
+        })
       }
     },
     cancel () {
