@@ -11,6 +11,22 @@
         <v-text-field v-model="name" label="名前" :readonly="isReadOnly" />
         <v-text-field v-model="code" label="コード" :readonly="isReadOnly" @input="inputCode" />
         <v-select v-model="format" label="フォーマット" :items="barcodeOpt" :readonly="isReadOnly" @change="changeFormat" />
+        <div v-if="isReadOnly">
+          <div>
+            <label style="font-size: 12px; color: #00000099">
+              URL
+            </label>
+          </div>
+          <div style="margin: 0px 0px 28px 0px;">
+            <a v-if="url" :href="url" target="_blank" style="word-break: break-all;">
+              {{ url }}
+            </a>
+            <p v-else style="word-wrap:break-word;">
+              URL is empty
+            </p>
+          </div>
+        </div>
+        <v-text-field v-else v-model="url" label="URL" />
       </v-card-text>
       <v-card-actions>
         <v-btn v-if="isReadOnly" text @click="edit">
@@ -40,6 +56,7 @@ export default {
     isReadOnly: true,
     name: '',
     code: '',
+    url: '',
     refs: 0,
     items: []
   }),
@@ -54,6 +71,7 @@ export default {
         this.name = records[0].name
         this.code = records[0].code
         this.format = records[0].format
+        this.url = records[0].url
         this.options = { format: this.format }
         this.refs = records[0].refs + 1
         db.cards.update(this.id, {
@@ -80,7 +98,7 @@ export default {
           name: this.name,
           code: this.code,
           format: this.format,
-          link: '',
+          url: this.url,
           refs: this.refs
         })
         alert('更新完了')

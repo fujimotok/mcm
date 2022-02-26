@@ -14,6 +14,7 @@
         <v-text-field v-model="name" label="名前" />
         <v-text-field v-model="code" label="コード" @input="inputCode" />
         <v-select v-model="format" label="フォーマット" :items="barcodeOpt" @change="changeFormat" />
+        <v-text-field v-model="url" label="URL" />
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="add">
@@ -46,6 +47,7 @@ export default {
     isError: false,
     name: '',
     code: '',
+    url: '',
     options: { format: 'CODE128' },
     format: 'CODE128',
     barcodeOpt: ['CODE128', 'EAN2', 'EAN5', 'EAN8', 'EAN13', 'UPC', 'CODE39', 'ITF14', 'MSI', 'codabar']
@@ -73,7 +75,7 @@ export default {
             name: this.name,
             code: this.code,
             format: this.format,
-            url: '',
+            url: this.url,
             refs: 0
           }
         ).then(() => {
