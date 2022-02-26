@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-layout justify-center>
-        <vue-barcode v-if="!isError" :value="code" :options="options" class="ma-6"/>
+        <vue-barcode v-if="!isError" :value="code" :options="options" class="ma-6" @click.native="click" />
         <p v-else>
           Invalid Value
         </p>
@@ -89,6 +89,12 @@ export default {
     changeFormat (event) {
       this.isError = false
       this.options = { format: event }
+    },
+    click () {
+      const shareData = {
+        title: 'Dummy'
+      }
+      navigator.share(shareData).then()
     }
   }
 }
