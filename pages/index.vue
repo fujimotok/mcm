@@ -4,7 +4,7 @@
       v-model="selected"
     >
       <template v-for="(item, index) in items">
-        <v-list-item :key="item.name" @click="show(index)">
+        <v-list-item :key="item.name" @click="show(item.id)">
           <template>
             <v-list-item-content>
               <v-list-item-title v-text="item.name" />
@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { db } from '../js/db'
+
 export default {
   name: 'IndexPage',
   data: () => ({
@@ -46,20 +48,12 @@ export default {
     title: 'カード一覧'
   }),
   mounted () {
-    this.items = JSON.parse(localStorage.getItem('items')) || []
+    db.cards.orderBy(':id').reverse().toArray()
+      .then((records) => {
+        this.items = this.items.concat(records)
+      })
   },
   methods: {
-    addItem () {
-      this.items.push('item_' + this.items.length)
-      this.setItems()
-    },
-    deleteAllItems () {
-      this.items = []
-      this.setItems()
-    },
-    setItems () {
-      localStorage.setItem('items', JSON.stringify(this.items))
-    },
     add () {
       localStorage.setItem('code', '')
       localStorage.setItem('format', 'CODE128')
