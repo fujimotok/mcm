@@ -48,7 +48,7 @@ export default {
     title: 'カード一覧'
   }),
   mounted () {
-    db.cards.orderBy(':id').reverse().toArray()
+    db.cards.orderBy('refs').reverse().toArray()
       .then((records) => {
         this.items = this.items.concat(records)
       })
