@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-layout justify-center>
-        <vue-barcode v-if="!isError" :value="code" :options="options" class="ma-6" @click.native="click" />
+        <vue-barcode v-if="!isError" :value="code" :options="options" style="width: 80%;" @click.native="click" />
         <p v-else>
           Invalid Value
         </p>
