@@ -4,9 +4,6 @@ PWA barcode reader / display
 reader: Quaggajs
 display: vue-barcode
 
-## Demo Page
-https://members-card-manager.herokuapp.com/
-
 ## Build Setup
 
 ```bash
